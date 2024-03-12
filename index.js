@@ -1,11 +1,19 @@
 const express = require('express');
+const path = require('path');
 const morgan = require('morgan');
+const cors = require('cors');
 const app = express();
 
+// Define la ruta a la carpeta dist
+const distPath = 'C:\\Windows\\System32\\appint\\dist';
+
+// Sirve los archivos estáticos desde la carpeta dist
+app.use(express.static(distPath));
+app.use(cors())
 app.use(express.json());
 
 morgan.token('body', function (req, res) { return JSON.stringify(req.body) });
-app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'));
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
 let persons = [
     {
@@ -35,8 +43,8 @@ let persons = [
     }
 ];
 
-app.get('/', (request, response) => {
-    response.send('<h1>PHONEBOOK!</h1>');
+app.get('/', (req, res) => {
+    res.sendFile(path.join(distPath, 'index.html'));
 });
 
 app.get('/info', (request, response) => {
@@ -69,6 +77,32 @@ app.delete('/api/persons/:id', (request, response) => {
     persons = persons.filter(person => person.id !== id);
 
     response.status(204).end();
+});
+
+app.put('/api/persons/:id', (request, response) => {
+    const id = Number(request.params.id);
+    const body = request.body;
+
+    if (!body.name || !body.number) {
+        return response.status(400).json({
+            error: 'name or number missing'
+        });
+    }
+
+    const personIndex = persons.findIndex(person => person.id === id);
+
+    if (personIndex !== -1) {
+        const updatedPerson = {
+            ...persons[personIndex],
+            name: body.name,
+            number: body.number
+        };
+
+        persons[personIndex] = updatedPerson;
+        response.json(updatedPerson);
+    } else {
+        response.status(404).end();
+    }
 });
 
 const generateId = () => {
@@ -105,7 +139,7 @@ app.post('/api/persons', (request, response) => {
     response.json(newPerson);
 });
 
-const PORT = 3001;
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
+  console.log(`Server running on port ${PORT}`)
+})
