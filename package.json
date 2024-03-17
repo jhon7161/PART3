@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node mongo.js",
+    "start": "node index.js",
     "dev": "nodemon index.js",
     "build:ui": "rm -rf dist && cd C:\\Windows\\System32\\paarrt2 && npm run build && cp -r dist C:\\Users\\jhon\\Desktop\\servidornode",
     "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push"
