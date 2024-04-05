@@ -1,10 +1,44 @@
-POST https://part3servidor.onrender.com/api/persons
-Content-Type: application/json
+GET http://localhost:3001/api/persons/
+
+###
+GET http://localhost:3001/api/persons/660059bf0bcabeed4de8b2be
+
+###
+POST http://localhost:3001/api/persons/ 
+content-type: application/json
 
 {
-    "name": "pedro infante",
-    "number": "123-4658745"
+    "name": "estes",
+    "number": "852147"
 }
+###
+PUT http://localhost:3001/api/persons/660c7ea5625b6a8e20fd07ce
+
+
+{
+    "name": "ROCHIS",
+    "number": 1122647161,
+
+} 
+
+
+
+
+###
+DELETE http://localhost:3001/api/persons/660059bf0bcabeed4de8b2be
+
+
+###
+
+
+
+
+
+
+
+
+
+
 
 
 
