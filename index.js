@@ -14,7 +14,6 @@ app.use(cors());
 app.use(express.json());
 
 
-
 morgan.token('body', function (req, res) { return JSON.stringify(req.body) });
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'));
 
@@ -42,12 +41,29 @@ app.post('/api/persons', (request, response) => {
     response.json(savedPerson)
   })
 })
-app.get('/api/persons/:id', (request, response,next) => {
-    Person.findById(request.params.id).then(person => {
-      response.json(person)
-    })
-    .catch(error => next(error))
-  })
+app.get('/api/persons/:id', (request, response, next) => {
+  Person.findById(request.params.id)
+      .then(person => {
+          if (person) {
+              response.json(person);
+          } else {
+              response.status(404).end();
+          }
+      })
+      .catch(error => next(error));
+});
+
+// Modificar el manejo de la ruta /info
+app.get('/info', (request, response) => {
+  Person.countDocuments({})
+      .then(count => {
+          response.send(`<p>Phonebook has info for ${count} people</p><p>${new Date()}</p>`);
+      })
+      .catch(error => {
+          console.error('Error getting count:', error);
+          response.status(500).json({ error: 'An internal server error occurred' });
+      });
+});
   app.delete('/api/persons/:id', (request, response, next) => {
     Person.findByIdAndDelete(request.params.id)
       .then(result => {
@@ -69,6 +85,12 @@ app.get('/api/persons/:id', (request, response,next) => {
       })
       .catch(error => next(error))
   })
+  const unknownEndpoint = (request, response) => {
+    response.status(404).send({ error: 'unknown endpoint' })
+  }
+  
+
+  app.use(unknownEndpoint)
   
 const errorHandler = (error, request, response, next) => {
     console.error(error.message);
