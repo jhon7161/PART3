@@ -18,6 +18,10 @@ app.use(express.json());
 morgan.token('body', function (req, res) { return JSON.stringify(req.body) });
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'));
 
+app.get('/', (req, res) => {
+    res.sendFile(path.join(distPath, 'index.html'));
+});
+
 app.get('/api/persons', (request, response) => {
     Person.find({}).then(persons => {
         response.json(persons);
