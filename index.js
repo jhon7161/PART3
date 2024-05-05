@@ -7,7 +7,7 @@ const cors = require('cors');
 const app = express();
 const Person = require('./models/urlmongo.js');
 
-const distPath = 'https://github.com/jhon7161/PART3/tree/main/dist';
+const distPath = path.join(__dirname, 'dist');
 
 
 app.use(express.static(distPath));
