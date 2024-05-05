@@ -7,7 +7,8 @@ const cors = require('cors');
 const app = express();
 const Person = require('./models/urlmongo.js');
 
-const distPath = 'C:\\Windows\\System32\\appint\\dist';
+const distPath = 'C:\\Users\\jhon\\Desktop\\servidornode\\dist';
+
 
 app.use(express.static(distPath));
 app.use(cors());
@@ -25,22 +26,54 @@ app.get('/api/persons', (request, response) => {
         response.status(500).json({ error: 'An internal server error occurred' });
     });
 });
-app.post('/api/persons', (request, response) => {
+//*app.post('/api/persons', (request, response) => {
+  //  const body = request.body;
+
+ // if (body.name === undefined) {
+   // return response.status(400).json({ error: 'content missing' })
+  //}
+
+ // const person= new Person({
+   // name: body.name,
+   // number: body.number
+  //})
+
+  //person.save().then(savedPerson => {
+   // response.json(savedPerson)
+  //})
+  app.post('/api/persons', (request, response) => {
     const body = request.body;
 
-  if (body.name === undefined) {
-    return response.status(400).json({ error: 'content missing' })
-  }
+    // Validar que el campo 'name' esté presente
+    if (!body.name) {
+        return response.status(400).json({ error: 'content missing' });
+    }
 
-  const person= new Person({
-    name: body.name,
-    number: body.number
-  })
+    // Crear una nueva instancia de Persona con los datos recibidos
+    const person = new Person({
+        name: body.name,
+        number: body.number
+    });
 
-  person.save().then(savedPerson => {
-    response.json(savedPerson)
-  })
-})
+    // Guardar la nueva persona en la base de datos
+    person.save()
+        .then(savedPerson => {
+            response.json(savedPerson); // Enviar la persona guardada como respuesta
+        })
+        .catch(error => {
+            // Manejar errores de validación u otros errores
+            if (error.name === 'ValidationError') {
+                // Mongoose ValidationError: capturar errores de validación
+                const validationErrors = Object.values(error.errors).map(err => err.message);
+                return response.status(400).json({ error: validationErrors });
+            } else {
+                // Otros errores
+                console.error('Error al guardar la persona:', error);
+                return response.status(500).json({ error: 'Ocurrió un problema al guardar la persona' });
+            }
+        });
+});
+
 app.get('/api/persons/:id', (request, response, next) => {
   Person.findById(request.params.id)
       .then(person => {
@@ -72,19 +105,31 @@ app.get('/info', (request, response) => {
       .catch(error => next(error))
   })
   app.put('/api/persons/:id', (request, response, next) => {
-    const body = request.body
-  
-    const person= {
-      name: body.name,
-      number: body.number,
-    }
-  
-    Person.findByIdAndUpdate(request.params.id, person, { new: true })
-      .then(updatedPerson => {
-        response.json(updatedPerson)
-      })
-      .catch(error => next(error))
-  })
+    const body = request.body;
+
+    const person = {
+        name: body.name,
+        number: body.number,
+    };
+
+    Person.findByIdAndUpdate(request.params.id, person, { new: true, runValidators: true })
+        .then(updatedPerson => {
+            if (!updatedPerson) {
+                // Si no se encontró la persona con el ID especificado
+                return response.status(404).json({ error: 'The contact does not exist' });
+            }
+            response.json(updatedPerson);
+        })
+        .catch(error => {
+            if (error.name === 'ValidationError') {
+                const validationErrors = Object.values(error.errors).map(err => err.message);
+                return response.status(400).json({ error: validationErrors });
+            } else {
+                console.error('Error updating person:', error);
+                return response.status(500).json({ error: 'An error occurred while updating the person' });
+            }
+        });
+});
   const unknownEndpoint = (request, response) => {
     response.status(404).send({ error: 'unknown endpoint' })
   }
