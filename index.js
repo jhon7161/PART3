@@ -30,26 +30,12 @@ app.get('/api/persons', (request, response) => {
         response.status(500).json({ error: 'An internal server error occurred' });
     });
 });
-//*app.post('/api/persons', (request, response) => {
-  //  const body = request.body;
 
- // if (body.name === undefined) {
-   // return response.status(400).json({ error: 'content missing' })
-  //}
-
- // const person= new Person({
-   // name: body.name,
-   // number: body.number
-  //})
-
-  //person.save().then(savedPerson => {
-   // response.json(savedPerson)
-  //})
   app.post('/api/persons', (request, response) => {
     const body = request.body;
 
     // Validar que el campo 'name' esté presente
-    if (!body.name) {
+    if (body.name === undefined) {
         return response.status(400).json({ error: 'content missing' });
     }
 
