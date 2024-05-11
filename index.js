@@ -6,12 +6,15 @@ const morgan = require('morgan');
 const cors = require('cors');
 const app = express();
 const Person = require('./models/urlmongo.js');
+const FRONTEND_URL = process.env.FRONTEND_URL; 
 
 const distPath = path.join(__dirname, 'dist');
 
 
 app.use(express.static(distPath));
-app.use(cors());
+app.use(cors({origin:FRONTEND_URL,
+ })
+);
 app.use(express.json());
 
 
