@@ -1,27 +1,24 @@
 {
-  "name": "yes",
+  "name": "my-express-app",
   "version": "1.0.0",
-  "description": "",
+  "description": "A simple Express.js application with MongoDB integration",
+  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
-    "dev": "nodemon index.js",
-    "build:ui": "rm -rf dist && cd C:\\Windows\\System32\\paarrt2 && npm run build && cp -r dist C:\\Users\\jhon\\Desktop\\servidornode",
-    "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push"
+    "dev": "nodemon index.js"
   },
-  "author": "",
+  "author": "Tu Nombre",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
-    "dotenv": "^16.4.5",
-    "express": "^4.18.3",
-    "mongodb": "^6.5.0",
-    "mongoose": "^8.2.2",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.2",
+    "mongoose": "^6.2.2",
     "morgan": "^1.10.0",
-    "path": "^0.12.7",
-    "uuid": "^9.0.1"
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "nodemon": "^3.1.0"
+    "nodemon": "^2.0.15"
   }
 }
+
