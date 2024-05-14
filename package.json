@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "build": "npm install --prefix ./front && npm run build --prefix ./front && npm install"
+    "build": "npm install --prefix ./FRONT && npm run build --prefix ./FRONT && npm install"
   },
   "author": "Tu Nombre",
   "license": "ISC",
