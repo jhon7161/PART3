@@ -10,7 +10,7 @@ const punycode = require('punycode/');
 
  
 
-const distPath = path.join(__dirname, 'dist');
+const distPath = path.join(__dirname, 'FRONT/dist');
 
 
 app.use(express.static(distPath));
